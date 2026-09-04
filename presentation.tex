@@ -1,0 +1,491 @@
+% Clone this folder, edit config.tex, drop figures into images/, then fill the frames.
+% A complete talk using this layout is in example/ (SICS-155 / MICCAI 2025).
+
+\documentclass[9pt,aspectratio=169]{beamer}
+
+\input{config.tex}
+\input{preamble.tex}
+
+\title{\TalkTitle}
+\subtitle{\TalkSubtitle}
+\date{\TalkDate}
+\author{\TalkAuthor}
+\institute{\TalkInstitute}
+
+\begin{document}
+
+% ========================================================
+% Title --- logos on the right, metadata + optional URL on the left
+% ========================================================
+\begin{frame}[plain]
+  \begin{columns}[T,onlytextwidth]
+    \column{0.7\textwidth}
+      \titlepage
+      \vspace{0.5em}
+      {\scriptsize Slides: \href{\TalkURL}{\TalkURL}}
+    \column{0.25\textwidth}
+      \vspace{2.2cm}
+      \begin{figure}
+        \centering
+        \vspace{-1.2em}
+        \includegraphics[width=0.9\linewidth]{um6p_logo.pdf}
+        \vspace{-1.0em}
+      \end{figure}
+      \vspace{0.5cm}
+      \begin{figure}
+        \centering
+        \vspace{-1.2em}
+        \includegraphics[width=0.9\linewidth]{cc-logo.pdf}
+        \vspace{-1.0em}
+      \end{figure}
+  \end{columns}
+\end{frame}
+
+
+% ========================================================
+% Overview --- 2-col: problem + approach | stacked figures
+% ========================================================
+\begin{frame}{Problem Overview}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.65\textwidth}
+      \begin{block}{Setting}
+        \textbf{Task:} one-line description of the dataset / benchmark
+
+        \textbf{Core difficulty:} the failure mode you care about
+        \begin{itemize}
+          \item Failure mode A
+          \item Failure mode B
+          \item What a good solution must do
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Approach}
+        \textbf{Strategy:} high-level idea in one sentence
+
+        \textbf{Base model:} \methodname with your features / backbone
+
+        \textbf{Change:} what you add on top
+      \end{block}
+
+    \column{0.3\textwidth}
+      \begin{block}{}
+        \vspace{-1.5em}
+        \begin{figure}
+          \centering
+          \vspace{-1.2em}
+          \placeholderfig[0.85]{venue / logo}
+          \caption{Venue}
+          \vspace{-1.2em}
+        \end{figure}
+      \end{block}
+      \vspace{-0.2cm}
+      \begin{block}{}
+        \vspace{-1.0em}
+        \begin{figure}
+          \centering
+          \vspace{-1.2em}
+          \placeholderfig{task preview}
+          \caption{Task preview}
+          \vspace{-1.2em}
+        \end{figure}
+      \end{block}
+  \end{columns}
+\end{frame}
+
+
+% ========================================================
+% Prior work --- 2-col: method blocks | sidebar notes
+% ========================================================
+\begin{frame}{Previous Methods}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.65\textwidth}
+      \begin{block}{Family A}
+        \textbf{Variant 1:}
+        \begin{itemize}
+          \item Setup / pretraining
+          \item Segmenter / head
+          \item Outcome: metric and failure mode
+        \end{itemize}
+        \textbf{Variant 2:} improved but still \textbf{below target}
+      \end{block}
+
+      \begin{block}{Family B}
+        \begin{itemize}
+          \item What it models well
+          \item Where it breaks (F1 / edit / boundaries / \ldots)
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Motivation for \methodname}
+        One sentence: why this architecture sits between the two families.
+      \end{block}
+
+    \column{0.3\textwidth}
+      \begin{block}{Notes}
+        \scriptsize
+        \vspace{-0.4em}
+        \begin{itemize}
+          \item Takeaway from family A
+          \item Takeaway from family B
+          \item What you still need
+        \end{itemize}
+        \vspace{-0.2em}
+      \end{block}
+  \end{columns}
+\end{frame}
+
+
+% ========================================================
+% Method --- 2-col: bullets | architecture figure
+% ========================================================
+\begin{frame}{Approach \& Baseline}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.65\textwidth}
+      \begin{block}{High-level approach}
+        \begin{itemize}
+          \item Inputs / features
+          \item Temporal or spatial model: \methodname
+          \item How the branches / modules exchange information
+          \item How you decode at inference
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{How it works}
+        \begin{itemize}
+          \item \textbf{Module A:} local evidence
+          \item \textbf{Module B:} long-range / global context
+          \item \textbf{Coupling:} attention, fusion, or gating
+          \item \textbf{Output:} framewise / pixelwise / scalar prediction
+        \end{itemize}
+      \end{block}
+
+    \column{0.3\textwidth}
+      \begin{minipage}[c][0.75\textheight][c]{\linewidth}
+        \begin{block}{}
+          \begin{figure}
+            \centering
+            \vspace{-1.0em}
+            \placeholderfig{architecture}
+            \caption{\methodname overview}
+            \vspace{-1.2em}
+          \end{figure}
+        \end{block}
+      \end{minipage}
+  \end{columns}
+\end{frame}
+
+
+% ========================================================
+% Equations --- 2-col: loss | figure
+% ========================================================
+\begin{frame}{Method Detail (Architecture \& Loss)}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.65\textwidth}
+      \begin{block}{Loss formulation}
+        \textbf{Term 1:}
+        $\displaystyle \mathcal{L}_{1}=\frac{1}{N}\sum_{i} \ell(y_i, \hat{y}_i)$
+
+        \textbf{Term 2:}
+        $\displaystyle \mathcal{L}_{2}=\frac{1}{N}\sum_{i} w_i\, r_i$
+
+        \textbf{Combined:}
+        $\displaystyle \mathcal{L}=\mathcal{L}_{1}+\alpha\,\mathcal{L}_{2}+\beta\,\mathcal{L}_{3}$
+      \end{block}
+
+      \begin{block}{Intuition}
+        \begin{itemize}
+          \item What each term encourages
+          \item How weights / gates behave
+          \item Inference cost (usually: none)
+        \end{itemize}
+      \end{block}
+
+    \column{0.3\textwidth}
+      \begin{block}{}
+        \begin{figure}
+          \centering
+          \vspace{-1.0em}
+          \placeholderfig{module diagram}
+          \caption{Where the extra head / loss sits}
+          \vspace{-1.2em}
+        \end{figure}
+      \end{block}
+  \end{columns}
+\end{frame}
+
+
+% ========================================================
+% Setup --- 2-col: data + training | hardware sidebar
+% ========================================================
+\begin{frame}{Experimental Setup}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.65\textwidth}
+      \begin{block}{Dataset \& Features}
+        \textbf{Split:} train / val / test, number of classes
+        \begin{itemize}
+          \item Resolution, fps, or input size
+          \item Feature / backbone dimensionality
+          \item Sampling stride or augmentation
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Training}
+        \textbf{Initialization:} pretrained / warm start
+        \begin{itemize}
+          \item Learning rate
+          \item Key scalar (merge weight, temperature, \ldots)
+        \end{itemize}
+
+        \textbf{Search:} W\&B / grid / random
+        \begin{itemize}
+          \item Hyperparameter A: $\{a_1, a_2\}$
+          \item Hyperparameter B: $\{b_1, b_2\}$
+        \end{itemize}
+      \end{block}
+
+    \column{0.3\textwidth}
+      \begin{block}{Hardware}
+        \begin{itemize}
+          \item GPU model
+          \item Wall-clock / memory notes
+        \end{itemize}
+      \end{block}
+  \end{columns}
+\end{frame}
+
+
+% ========================================================
+% Sweeps --- 2-col: search space | two stacked plots
+% ========================================================
+\begin{frame}{Hyperparameter Tuning}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.6\textwidth}
+      \begin{block}{Search spaces}
+        \begin{itemize}
+          \item $\beta$: $\{1.0,1.5,2.0\}$
+          \item $\gamma$: $\{2.0,3.0\}$
+          \item $\alpha$: $\{1.0,2.5,5.0\}$
+          \item Other knobs held fixed
+        \end{itemize}
+      \end{block}
+      \begin{block}{Selected configuration}
+        $\beta=\ldots,\ \gamma=\ldots,\ \alpha=\ldots$
+      \end{block}
+    \column{0.35\textwidth}
+      \begin{block}{}
+        \vspace{-0.6em}
+        \centering
+        \placeholderfig[0.95]{sweep A}\\[-0.2em]
+        {\scriptsize baseline}\\[0.4em]
+        \placeholderfig[0.95]{sweep B}\\[-0.2em]
+        {\scriptsize proposed}
+        \vspace{-0.6em}
+      \end{block}
+  \end{columns}
+\end{frame}
+
+
+% ========================================================
+% Results --- table + bullets | insights sidebar
+% ========================================================
+\begin{frame}{Results}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.6\textwidth}
+      \begin{block}{Test set}
+        \textbf{Submission / hold-out:}
+        \begin{itemize}
+          \item \textbf{Headline metric:} xx\% (rank / vs.\ baseline)
+          \item Consistency note
+          \item What the proposed variant changes
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Validation}
+        \vspace{0.5em}
+        \centering
+        \renewcommand{\arraystretch}{1.15}
+        \begin{tabular}{lccc}
+          \toprule
+          \textbf{Method} & \textbf{Acc} & \textbf{F1} & \textbf{Edit} \\
+          \midrule
+          Baseline & 00.0 & 00.0 & 00.0 \\
+          + proposed & \textbf{00.0} & \textbf{00.0} & 00.0 \\
+          \bottomrule
+        \end{tabular}
+        \vspace{0.5em}
+      \end{block}
+
+      \begin{block}{Qualitative}
+        \begin{itemize}
+          \item Cleaner transitions / fewer artifacts
+          \item Remaining errors
+        \end{itemize}
+      \end{block}
+
+    \column{0.35\textwidth}
+      \begin{block}{Key insights}
+        \begin{itemize}
+          \item What actually moved the metric
+          \item Cost at train vs.\ test time
+          \item What must be true for the gain to show up
+        \end{itemize}
+      \end{block}
+  \end{columns}
+\end{frame}
+
+
+% ========================================================
+% Qualitative --- full-width stacked figures
+% ========================================================
+\begin{frame}{Qualitative Results}
+  \begin{block}{}
+    \vspace{-1.0em}
+    \begin{figure}
+      \centering
+      \vspace{-1.0em}
+      \placeholderfig[0.82]{sequence 1: GT vs.\ prediction}
+      \caption{Ground truth (top) vs.\ predictions (bottom)}
+      \vspace{-1.0em}
+    \end{figure}
+    \vspace{0.4em}
+    \begin{figure}
+      \centering
+      \vspace{-0.8em}
+      \placeholderfig[0.82]{sequence 2}
+      \caption{Additional example}
+      \vspace{-1.0em}
+    \end{figure}
+  \end{block}
+\end{frame}
+
+
+% ========================================================
+% Ablation --- 2-col: analysis | cost + limitations
+% ========================================================
+\begin{frame}{Ablation \& Analysis}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.65\textwidth}
+      \begin{block}{Component analysis}
+        \textbf{Each add-on:}
+        \begin{itemize}
+          \item Term A alone
+          \item Term B alone
+          \item Combined: best (+x metric)
+        \end{itemize}
+
+        \textbf{Training dynamics:}
+        \begin{itemize}
+          \item Initialization / warm start
+          \item Learning-rate sensitivity
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Sensitivity}
+        \begin{itemize}
+          \item Best $\gamma$, $\beta$, merge weight, \ldots
+        \end{itemize}
+      \end{block}
+
+    \column{0.3\textwidth}
+      \begin{block}{Cost}
+        \textbf{Training:} extra head / loss only
+
+        \textbf{Inference:} identical to baseline
+      \end{block}
+
+      \vspace{0.5em}
+      \begin{block}{Limitations}
+        \begin{itemize}
+          \item Single dataset
+          \item Feature / backbone choice
+          \item Supervision type
+        \end{itemize}
+      \end{block}
+  \end{columns}
+\end{frame}
+
+
+% ========================================================
+% Conclusion --- 2-col + one-line takeaway
+% ========================================================
+\begin{frame}{Conclusion \& Future Work}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.65\textwidth}
+      \begin{block}{Contributions}
+        \textbf{Method:}
+        \begin{itemize}
+          \item Architectural change
+          \item Loss / training change
+          \item Train-only overhead
+        \end{itemize}
+
+        \textbf{Results:}
+        \begin{itemize}
+          \item Headline number
+          \item Qualitative gain
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Impact}
+        \begin{itemize}
+          \item Who uses this
+          \item Why the cost profile matters
+        \end{itemize}
+      \end{block}
+
+    \column{0.3\textwidth}
+      \begin{block}{Future work}
+        \begin{itemize}
+          \item Alternative integrations
+          \item Other datasets
+          \item Deployment
+        \end{itemize}
+      \end{block}
+  \end{columns}
+
+  \vspace{0.5em}
+  \begin{center}
+    \begin{minipage}{0.8\textwidth}
+      \centering
+      \scriptsize
+      \textbf{One-sentence takeaway that can be photographed from the back row.}
+    \end{minipage}
+  \end{center}
+\end{frame}
+
+
+% ========================================================
+% Thank you --- metropolis standout + author contacts
+% ========================================================
+\begin{frame}[standout]
+  \begin{center}
+    {\Huge Thank You}
+    \vspace{1cm}
+
+    \separator
+
+    \vspace{0.5cm}
+
+    \begin{columns}[T,onlytextwidth]
+      \column{0.28\textwidth}
+        \centering
+        {\normalsize\textbf{\AuthorOneName}\\
+        \AuthorOneOrg\\
+        \texttt{\AuthorOneEmail}}
+      \column{0.28\textwidth}
+        \centering
+        {\normalsize\textbf{\AuthorTwoName}\\
+        \AuthorTwoOrg\\
+        \texttt{\AuthorTwoEmail}}
+      \column{0.28\textwidth}
+        \centering
+        {\normalsize\textbf{\AuthorThreeName}\\
+        \AuthorThreeOrg\\
+        \texttt{\AuthorThreeEmail}}
+    \end{columns}
+    \vspace{2em}
+    {\large Slides: \href{\TalkURL}{\TalkURL}}
+  \end{center}
+\end{frame}
+
+\end{document}

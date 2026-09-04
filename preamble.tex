@@ -1,0 +1,92 @@
+% Shared Metropolis styling extracted from the SICS-155 talk.
+% Edit colors / footer text here; edit talk metadata in config.tex.
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{ifxetex,ifluatex}
+\newif\ifxetexorluatex
+\ifxetex\xetexorluatextrue\fi
+\ifluatex\xetexorluatextrue\fi
+\ifxetexorluatex
+  \usepackage{fontspec}
+  \usefonttheme{serif}
+  \defaultfontfeatures{Ligatures=TeX}
+  \IfFileExists{/usr/share/fonts/truetype/cmu/cmunrm.ttf}{%
+    \setmainfont{CMU Serif}[
+      UprightFont     = cmunrm.ttf,
+      ItalicFont      = cmunti.ttf,
+      SlantedFont     = cmunsl.ttf,
+      BoldFont        = cmunbx.ttf,
+      BoldItalicFont  = cmunbi.ttf,
+      BoldSlantedFont = cmunbsr.ttf,
+      Path            = /usr/share/fonts/truetype/cmu/
+    ]
+  }{}
+\fi
+
+% Compact sizing so two-column research slides fit
+\setbeamerfont{title}{size=\Large,series=\bfseries}
+\setbeamerfont{subtitle}{size=\large}
+\setbeamerfont{frametitle}{size=\normalsize,series=\bfseries}
+\setbeamerfont{block title}{size=\small,series=\bfseries}
+\setbeamerfont{block body}{size=\scriptsize,series=\mdseries}
+\setbeamerfont{caption}{size=\scriptsize}
+\setbeamerfont{itemize/enumerate body}{size=\scriptsize,series=\mdseries}
+\setbeamerfont{itemize/enumerate subbody}{size=\scriptsize,series=\mdseries}
+\setbeamerfont{normal text}{size=\scriptsize,series=\mdseries}
+
+\setlength{\leftmargini}{1.2em}
+\setlength{\leftmarginii}{1.0em}
+\addtolength{\itemsep}{-0.2em}
+
+\newenvironment{compactslide}{%
+  \begingroup
+  \setbeamerfont{block body}{size=\scriptsize}%
+  \setbeamerfont{itemize/enumerate body}{size=\scriptsize}%
+  \setlength{\leftmargini}{1.0em}%
+  \setlength{\leftmarginii}{0.8em}%
+  \addtolength{\itemsep}{-0.2em}%
+}{\endgroup}
+
+\usepackage{amssymb,xcolor}
+\definecolor{primaryOrange}{RGB}{230,126,34}
+\definecolor{darkOrange}{RGB}{211,84,0}
+\setbeamercolor{itemize item}{fg=primaryOrange}
+\setbeamercolor{itemize subitem}{fg=darkOrange}
+\setbeamercolor{alerted text}{fg=primaryOrange}
+\setbeamercolor{block title}{bg=primaryOrange!15,fg=black}
+\setbeamercolor{block body}{bg=primaryOrange!5}
+
+\setbeamertemplate{itemize item}{{\usebeamercolor[fg]{itemize item}\raisebox{0.15ex}{\small$\blacktriangleright$}}}
+\setbeamertemplate{itemize subitem}{{\usebeamercolor[fg]{itemize subitem}\raisebox{0.1ex}{\footnotesize$\triangleright$}}}
+
+% Footer: authors + affiliation; page numbers skip the title frame
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\textwidth, sep=2ex]{footline}%
+    \usebeamerfont{page number in head/foot}%
+    \insertauthor\hspace{0.5em}$\cdot$\hspace{0.5em}\TalkAffiliation
+    \hfill%
+    \ifnum\insertframenumber=1
+      \relax
+    \else
+      \the\numexpr\insertframenumber-1\relax/\the\numexpr\inserttotalframenumber-1\relax
+    \fi
+  \end{beamercolorbox}%
+}
+
+\usepackage{booktabs,graphicx,tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\graphicspath{{images/}}
+
+\newcommand{\separator}{\vspace{0.3em}\textcolor{primaryOrange}{\rule{\linewidth}{0.5pt}}\vspace{0.3em}}
+
+% Gray box used by the skeleton until you drop in real figures
+\newcommand{\placeholderfig}[2][0.95]{%
+  \begin{tikzpicture}
+    \fill[black!8] (0,0) rectangle (#1\linewidth,0.62*#1\linewidth);
+    \draw[black!25] (0,0) rectangle (#1\linewidth,0.62*#1\linewidth);
+    \node[text=black!45, align=center, font=\scriptsize] at (0.5*#1\linewidth, 0.31*#1\linewidth) {#2};
+  \end{tikzpicture}%
+}
