@@ -2,13 +2,27 @@
 
 Metropolis + orange UM6P styling used for the SICS-155 / MICCAI 2025 talk. Clone this folder, edit metadata, replace the gray placeholder figures, and compile.
 
+Compiled skeleton: [presentation.pdf](presentation.pdf)
+
+## Preview
+
+<p align="center">
+  <img src="preview/title.png" alt="Title slide with UM6P and College of Computing logos" width="720">
+</p>
+
+<p align="center">
+  <img src="preview/method.png" alt="Two-column method slide with loss equations and a figure placeholder" width="720">
+</p>
+
 ## Layout
 
 ```
+presentation.pdf   compiled skeleton (tracked in git)
 presentation.tex   fill-in skeleton (all slide types from the SICS talk)
 config.tex         title, authors, emails, URL
 preamble.tex       theme, fonts, colors, footer, \placeholderfig
 images/            um6p_logo.pdf, cc-logo.pdf, plus your figures
+preview/           README screenshots
 example/           the original SICS-155 talk (source + compiled PDF)
 ```
 
